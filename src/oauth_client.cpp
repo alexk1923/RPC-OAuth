@@ -96,11 +96,37 @@ operation *process_line(string line) {
 	return op;
 }
 
+void processOperation(operation *op) {
+	CLIENT *clnt;
+#ifndef DEBUG
+	clnt = clnt_create(HOST, AUTHORIZATION, OAUTH, "udp");
+	if (clnt == NULL) {
+		clnt_pcreateerror(HOST);
+		exit(1);
+	}
+#endif /* DEBUG */
+
+	switch (op->operation_type) {
+	case REQUEST: {
+		char **result = auth_1(&(op->user_id), clnt);
+		if (result == (char **)NULL) {
+			clnt_perror(clnt, "call failed");
+		}
+		cout << "result:" << (*result) << endl;
+		break;
+	}
+	default:
+		break;
+	}
+	clnt_destroy(clnt);
+}
+
 void read_operations(ifstream &input_file) {
 	string line;
 	while (input_file >> line) {
 		operation *op = process_line(line);
 		printClientOperation(op);
+		processOperation(op);
 	}
 }
 

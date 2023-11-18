@@ -2,10 +2,31 @@
 #include <stdio.h>
 
 #include "oauth.h"
+#include "serverdb.h"
+#include <iostream>
 
 char **auth_1_svc(char **argp, struct svc_req *rqstp) {
 	static char *result;
-	printf("%s\n", *argp);
+	// Check the existance of the user in db
+	for (auto element : dbUsers) {
+		cout << element << " ";
+	}
+
+	cout << "ResourceS:" << endl;
+	for (auto element : dbResources) {
+		cout << element << " ";
+	}
+	printf("\n");
+
+	cout << "Permissions:" << endl;
+	for (auto perm : dbResourceMap) {
+		cout << perm.first << ":" << perm.second << " ";
+	}
+	printf("\n");
+
+	cout << token_lifetime;
+	printf("\n");
+
 	/*
 	 * insert server code here
 	 */
