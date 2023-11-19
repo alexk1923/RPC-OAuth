@@ -22,7 +22,7 @@ enum e_res_code {
 enum e_approval_status {
     SIGNED,
     NOT_SIGNED
-}
+};
 
 struct resource_perm_struct {
     string resource<>;
@@ -48,7 +48,7 @@ struct approve_req {
 struct action_req {
     e_operation_type operation;
     string resource<>;
-    acces_token_struct access_token<>;
+    acces_token_struct access_token;
 };
 
 

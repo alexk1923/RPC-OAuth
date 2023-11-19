@@ -35,6 +35,12 @@ enum e_res_code {
 };
 typedef enum e_res_code e_res_code;
 
+enum e_approval_status {
+	SIGNED = 0,
+	NOT_SIGNED = 1,
+};
+typedef enum e_approval_status e_approval_status;
+
 struct resource_perm_struct {
 	char *resource;
 	char *permission;
@@ -108,6 +114,7 @@ extern int authorization_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_e_operation_type (XDR *, e_operation_type*);
 extern  bool_t xdr_e_res_code (XDR *, e_res_code*);
+extern  bool_t xdr_e_approval_status (XDR *, e_approval_status*);
 extern  bool_t xdr_resource_perm_struct (XDR *, resource_perm_struct*);
 extern  bool_t xdr_acces_token_struct (XDR *, acces_token_struct*);
 extern  bool_t xdr_access_token_req (XDR *, access_token_req*);
@@ -117,6 +124,7 @@ extern  bool_t xdr_action_req (XDR *, action_req*);
 #else /* K&R C */
 extern bool_t xdr_e_operation_type ();
 extern bool_t xdr_e_res_code ();
+extern bool_t xdr_e_approval_status ();
 extern bool_t xdr_resource_perm_struct ();
 extern bool_t xdr_acces_token_struct ();
 extern bool_t xdr_access_token_req ();

@@ -16,7 +16,7 @@ xdr_e_operation_type (XDR *xdrs, e_operation_type *objp)
 }
 
 bool_t
-xdr_e_signed_status (XDR *xdrs, e_signed_status *objp)
+xdr_e_res_code (XDR *xdrs, e_res_code *objp)
 {
 	register int32_t *buf;
 
@@ -26,7 +26,7 @@ xdr_e_signed_status (XDR *xdrs, e_signed_status *objp)
 }
 
 bool_t
-xdr_e_res_code (XDR *xdrs, e_res_code *objp)
+xdr_e_approval_status (XDR *xdrs, e_approval_status *objp)
 {
 	register int32_t *buf;
 
@@ -43,19 +43,6 @@ xdr_resource_perm_struct (XDR *xdrs, resource_perm_struct *objp)
 	 if (!xdr_string (xdrs, &objp->resource, ~0))
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->permission, ~0))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
-xdr_auth_token_struct (XDR *xdrs, auth_token_struct *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_e_signed_status (xdrs, &objp->signed_status))
-		 return FALSE;
-	 if (!xdr_array (xdrs, (char **)&objp->resource_permissions.resource_permissions_val, (u_int *) &objp->resource_permissions.resource_permissions_len, ~0,
-		sizeof (resource_perm_struct), (xdrproc_t) xdr_resource_perm_struct))
 		 return FALSE;
 	return TRUE;
 }
