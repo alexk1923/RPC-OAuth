@@ -31,9 +31,6 @@ void authorization_1(char *host) {
 	auth_token_struct *result_4;
 	auth_token_struct approve_req_token_1_arg;
 
-	auth_1_arg = (char *)malloc(20 * sizeof(char));
-	strcpy(auth_1_arg, "vrajeala mea");
-
 #ifndef DEBUG
 	clnt = clnt_create(host, AUTHORIZATION, OAUTH, "udp");
 	if (clnt == NULL) {
@@ -42,10 +39,10 @@ void authorization_1(char *host) {
 	}
 #endif /* DEBUG */
 
-	result_1 = auth_1(&auth_1_arg, clnt);
-	if (result_1 == (char **)NULL) {
-		clnt_perror(clnt, "call failed");
-	}
+	// result_1 = auth_1(&auth_1_arg, clnt);
+	// if (result_1 == (char **)NULL) {
+	// 	clnt_perror(clnt, "call failed");
+	// }
 	// result_2 = access_1(&access_1_arg, clnt);
 	// if (result_2 == (acces_token_struct *)NULL) {
 	// 	clnt_perror(clnt, "call failed");
@@ -70,7 +67,8 @@ operation *process_line(string line) {
 	int idx = 0;
 	operation *op = (operation *)malloc(sizeof(operation));
 	op->user_id = (char *)malloc(MAX_USER_ID_LENGTH * sizeof(char));
-	op->resource = (char *)malloc(MAX_RESOURCE_SIZE * sizeof(char));
+
+	op->automatic_refresh = -1;
 	while (ss.good()) {
 		string substr;
 		getline(ss, substr, ',');
@@ -84,7 +82,9 @@ operation *process_line(string line) {
 		case 2:
 			if (op->operation_type == REQUEST) {
 				op->automatic_refresh = stoi(substr);
+				op->resource = NULL;
 			} else {
+				op->resource = (char *)malloc(MAX_RESOURCE_SIZE * sizeof(char));
 				strcpy(op->resource, substr.c_str());
 			}
 			break;
@@ -108,11 +108,15 @@ void processOperation(operation *op) {
 
 	switch (op->operation_type) {
 	case REQUEST: {
-		char **result = auth_1(&(op->user_id), clnt);
-		if (result == (char **)NULL) {
+		char **result_auth = auth_1(&(op->user_id), clnt);
+		if (result_auth == (char **)NULL) {
 			clnt_perror(clnt, "call failed");
 		}
-		cout << "result:" << (*result) << endl;
+		cout << "result:" << (*result_auth) << endl;
+
+		auth_token_struct *auth_token =
+			(auth_token_struct *)malloc(sizeof(auth_token));
+
 		break;
 	}
 	default:

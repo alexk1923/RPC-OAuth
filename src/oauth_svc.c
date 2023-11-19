@@ -106,7 +106,7 @@ void read_resources(ifstream &input_file) {
 	}
 }
 
-void process_line(string line) {
+void process_line(string line, unordered_map<string, string> &newMap) {
 	stringstream ss(line);
 	int idx = 0;
 
@@ -115,13 +115,13 @@ void process_line(string line) {
 		string permissions;
 		getline(ss, resource, ',');
 		getline(ss, permissions, ',');
-		if (idx == 0) {
-			// File
-			cout << "RESOURCE:" << resource << endl;
-			cout << "PERMISSIONS:" << permissions << endl;
 
-			dbResourceMap.insert(make_pair(resource, permissions));
-		}
+		// cout << "RESOURCE:" << resource << endl;
+		// cout << "PERMISSIONS:" << permissions << endl;
+
+		// File
+
+		newMap.insert(make_pair(resource, permissions));
 
 		idx++;
 	}
@@ -131,8 +131,19 @@ void read_approvals(ifstream &input_file) {
 	string line;
 	int i = 0;
 	while (input_file >> line) {
-		process_line(line);
+		unordered_map<string, string> newMap;
+		process_line(line, newMap);
+
+		dbResourceMap.insert(dbResourceMap.begin(), newMap);
+
 		i++;
+	}
+
+	for (auto currentMap : dbResourceMap) {
+		for (auto perm : currentMap) {
+			cout << perm.first << ":" << perm.second << endl;
+		}
+		cout << "============\n\n\n\n\n\n\n";
 	}
 }
 

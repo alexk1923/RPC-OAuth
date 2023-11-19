@@ -7,10 +7,6 @@ enum e_operation_type {
     EXECUTE
 };
 
-enum e_signed_status {
-    NOT_SIGNED,
-    SIGNED
-};
 
 enum e_res_code {
     USER_NOT_FOUND,
@@ -28,10 +24,6 @@ struct resource_perm_struct {
     string permission<>;
 };
 
-struct auth_token_struct {
-    e_signed_status signed_status;
-    resource_perm_struct resource_permissions<>;
-};
 
 struct acces_token_struct {
     string access_token<>;
@@ -60,6 +52,6 @@ program AUTHORIZATION{
         string auth(string) = 1;
         acces_token_struct access(access_token_req) = 2;
         string validate_action(action_req) = 3;
-        auth_token_struct approve_req_token(auth_token_struct) = 4;
+        string approve_req_token(string) = 4;
     } = 1;
 } = 0x31234567;

@@ -9,6 +9,6 @@ using namespace std;
 
 extern vector<string> dbUsers;
 extern vector<string> dbResources;
-extern unordered_map<string, string> dbResourceMap;
+extern vector<unordered_map<string, string>> dbResourceMap;
 extern int token_lifetime;
 #endif

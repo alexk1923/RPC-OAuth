@@ -7,12 +7,12 @@ void printClientOperation(operation *op) {
 	cout << op->user_id << endl;
 	cout << op->operation_type << endl;
 	cout << op->automatic_refresh << endl;
+
 	if (!op->resource) {
 		cout << "No resource" << endl;
 	} else {
 		cout << op->resource << endl;
 	}
-	cout << endl;
 }
 
 e_operation_type string_to_operation_type(string str) {
@@ -34,3 +34,13 @@ e_operation_type string_to_operation_type(string str) {
 	}
 	return op_type;
 }
+
+char *const res_code_to_str[] = {
+	[USER_NOT_FOUND] = "USER_NOT_FOUND",
+	[REQUEST_DENIED] = "REQUEST_DENIED",
+	[PERMISSION_DENIED] = "PERMISSION_DENIED",
+	[TOKEN_EXPIRED] = "TOKEN_EXPIRED",
+	[RESOURCE_NOT_FOUND] = "RESOURCE_NOT_FOUND",
+	[OPERATION_NOT_PERMITTED] = "OPERATION_NOT_PERMITTED",
+	[PERMISSION_GRANTED] = "PERMISSION_GRANTED",
+};

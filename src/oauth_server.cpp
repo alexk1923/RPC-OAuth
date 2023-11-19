@@ -1,35 +1,30 @@
 #include "oauth.h"
-#include <stdio.h>
-
-#include "oauth.h"
 #include "serverdb.h"
+#include "token.h"
+#include "utils/utils.h"
 #include <iostream>
+#include <stdio.h>
 
 char **auth_1_svc(char **argp, struct svc_req *rqstp) {
 	static char *result;
 	// Check the existance of the user in db
+	char *userId = *argp;
+	cout << "My user:" << userId << endl;
+
+	bool found = false;
 	for (auto element : dbUsers) {
-		cout << element << " ";
+		if (element == userId) {
+			cout << "Am gasit user-ul in database si generez token-ul" << endl;
+			// Generate Access Token
+			result = generate_access_token(userId);
+			cout << "Result:" << result << endl;
+			found = true;
+		}
 	}
-
-	cout << "ResourceS:" << endl;
-	for (auto element : dbResources) {
-		cout << element << " ";
+	if (!found) {
+		result = res_code_to_str[USER_NOT_FOUND];
 	}
-	printf("\n");
-
-	cout << "Permissions:" << endl;
-	for (auto perm : dbResourceMap) {
-		cout << perm.first << ":" << perm.second << " ";
-	}
-	printf("\n");
-
-	cout << token_lifetime;
-	printf("\n");
-
-	/*
-	 * insert server code here
-	 */
+	cout << endl;
 
 	return &result;
 }
@@ -58,10 +53,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 auth_token_struct *approve_req_token_1_svc(auth_token_struct *argp,
 										   struct svc_req *rqstp) {
 	static auth_token_struct result;
-
-	/*
-	 * insert server code here
-	 */
+	// Add resource permissions to the token
 
 	return &result;
 }

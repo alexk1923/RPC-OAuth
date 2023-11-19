@@ -8,11 +8,9 @@
 
 #include <rpc/rpc.h>
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 
 enum e_operation_type {
 	REQUEST = 0,
@@ -89,58 +87,59 @@ typedef struct action_req action_req;
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define auth 1
-extern  char ** auth_1(char **, CLIENT *);
-extern  char ** auth_1_svc(char **, struct svc_req *);
+extern char **auth_1(char **, CLIENT *);
+extern char **auth_1_svc(char **, struct svc_req *);
 #define access 2
-extern  acces_token_struct * access_1(access_token_req *, CLIENT *);
-extern  acces_token_struct * access_1_svc(access_token_req *, struct svc_req *);
+extern acces_token_struct *access_1(access_token_req *, CLIENT *);
+extern acces_token_struct *access_1_svc(access_token_req *, struct svc_req *);
 #define validate_action 3
-extern  char ** validate_action_1(action_req *, CLIENT *);
-extern  char ** validate_action_1_svc(action_req *, struct svc_req *);
+extern char **validate_action_1(action_req *, CLIENT *);
+extern char **validate_action_1_svc(action_req *, struct svc_req *);
 #define approve_req_token 4
-extern  auth_token_struct * approve_req_token_1(auth_token_struct *, CLIENT *);
-extern  auth_token_struct * approve_req_token_1_svc(auth_token_struct *, struct svc_req *);
-extern int authorization_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+extern auth_token_struct *approve_req_token_1(auth_token_struct *, CLIENT *);
+extern auth_token_struct *approve_req_token_1_svc(auth_token_struct *,
+												  struct svc_req *);
+extern int authorization_1_freeresult(SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define auth 1
-extern  char ** auth_1();
-extern  char ** auth_1_svc();
+extern char **auth_1();
+extern char **auth_1_svc();
 #define access 2
-extern  acces_token_struct * access_1();
-extern  acces_token_struct * access_1_svc();
+extern acces_token_struct *access_1();
+extern acces_token_struct *access_1_svc();
 #define validate_action 3
-extern  char ** validate_action_1();
-extern  char ** validate_action_1_svc();
+extern char **validate_action_1();
+extern char **validate_action_1_svc();
 #define approve_req_token 4
-extern  auth_token_struct * approve_req_token_1();
-extern  auth_token_struct * approve_req_token_1_svc();
-extern int authorization_1_freeresult ();
+extern auth_token_struct *approve_req_token_1();
+extern auth_token_struct *approve_req_token_1_svc();
+extern int authorization_1_freeresult();
 #endif /* K&R C */
 
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
-extern  bool_t xdr_e_operation_type (XDR *, e_operation_type*);
-extern  bool_t xdr_e_signed_status (XDR *, e_signed_status*);
-extern  bool_t xdr_e_res_code (XDR *, e_res_code*);
-extern  bool_t xdr_resource_perm_struct (XDR *, resource_perm_struct*);
-extern  bool_t xdr_auth_token_struct (XDR *, auth_token_struct*);
-extern  bool_t xdr_acces_token_struct (XDR *, acces_token_struct*);
-extern  bool_t xdr_access_token_req (XDR *, access_token_req*);
-extern  bool_t xdr_approve_req (XDR *, approve_req*);
-extern  bool_t xdr_action_req (XDR *, action_req*);
+extern bool_t xdr_e_operation_type(XDR *, e_operation_type *);
+extern bool_t xdr_e_signed_status(XDR *, e_signed_status *);
+extern bool_t xdr_e_res_code(XDR *, e_res_code *);
+extern bool_t xdr_resource_perm_struct(XDR *, resource_perm_struct *);
+extern bool_t xdr_auth_token_struct(XDR *, auth_token_struct *);
+extern bool_t xdr_acces_token_struct(XDR *, acces_token_struct *);
+extern bool_t xdr_access_token_req(XDR *, access_token_req *);
+extern bool_t xdr_approve_req(XDR *, approve_req *);
+extern bool_t xdr_action_req(XDR *, action_req *);
 
 #else /* K&R C */
-extern bool_t xdr_e_operation_type ();
-extern bool_t xdr_e_signed_status ();
-extern bool_t xdr_e_res_code ();
-extern bool_t xdr_resource_perm_struct ();
-extern bool_t xdr_auth_token_struct ();
-extern bool_t xdr_acces_token_struct ();
-extern bool_t xdr_access_token_req ();
-extern bool_t xdr_approve_req ();
-extern bool_t xdr_action_req ();
+extern bool_t xdr_e_operation_type();
+extern bool_t xdr_e_signed_status();
+extern bool_t xdr_e_res_code();
+extern bool_t xdr_resource_perm_struct();
+extern bool_t xdr_auth_token_struct();
+extern bool_t xdr_acces_token_struct();
+extern bool_t xdr_access_token_req();
+extern bool_t xdr_approve_req();
+extern bool_t xdr_action_req();
 
 #endif /* K&R C */
 
