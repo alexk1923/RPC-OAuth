@@ -68,10 +68,7 @@ typedef struct approve_req approve_req;
 struct action_req {
 	e_operation_type operation;
 	char *resource;
-	struct {
-		u_int access_token_len;
-		acces_token_struct *access_token_val;
-	} access_token;
+	acces_token_struct access_token;
 };
 typedef struct action_req action_req;
 

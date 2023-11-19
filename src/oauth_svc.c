@@ -159,7 +159,7 @@ int main(int argc, char **argv) {
 	ifstream users_file(argv[1]);
 	ifstream resources_file(argv[2]);
 	ifstream approvals_file(argv[3]);
-	token_lifetime = stoi(argv[4]);
+	tokenLifetime = stoi(argv[4]);
 
 	read_users(users_file);
 	read_resources(resources_file);

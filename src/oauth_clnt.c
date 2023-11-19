@@ -54,15 +54,15 @@ validate_action_1(action_req *argp, CLIENT *clnt)
 	return (&clnt_res);
 }
 
-auth_token_struct *
-approve_req_token_1(auth_token_struct *argp, CLIENT *clnt)
+char **
+approve_req_token_1(char **argp, CLIENT *clnt)
 {
-	static auth_token_struct clnt_res;
+	static char *clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, approve_req_token,
-		(xdrproc_t) xdr_auth_token_struct, (caddr_t) argp,
-		(xdrproc_t) xdr_auth_token_struct, (caddr_t) &clnt_res,
+		(xdrproc_t) xdr_wrapstring, (caddr_t) argp,
+		(xdrproc_t) xdr_wrapstring, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}

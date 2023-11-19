@@ -39,6 +39,7 @@ struct acces_token_struct {
 struct access_token_req {
     string user_id<>;
     string auth_token<>;
+    int auto_refresh;
 };
 
 struct approve_req {

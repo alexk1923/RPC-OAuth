@@ -92,8 +92,7 @@ xdr_action_req (XDR *xdrs, action_req *objp)
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->resource, ~0))
 		 return FALSE;
-	 if (!xdr_array (xdrs, (char **)&objp->access_token.access_token_val, (u_int *) &objp->access_token.access_token_len, ~0,
-		sizeof (acces_token_struct), (xdrproc_t) xdr_acces_token_struct))
+	 if (!xdr_acces_token_struct (xdrs, &objp->access_token))
 		 return FALSE;
 	return TRUE;
 }
