@@ -26,7 +26,7 @@ static void authorization_1(struct svc_req *rqstp, register SVCXPRT *transp) {
 		char *auth_1_arg;
 		access_token_req access_1_arg;
 		action_req validate_action_1_arg;
-		auth_token_struct approve_req_token_1_arg;
+		char *approve_req_token_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -56,8 +56,8 @@ static void authorization_1(struct svc_req *rqstp, register SVCXPRT *transp) {
 		break;
 
 	case approve_req_token:
-		_xdr_argument = (xdrproc_t)xdr_auth_token_struct;
-		_xdr_result = (xdrproc_t)xdr_auth_token_struct;
+		_xdr_argument = (xdrproc_t)xdr_wrapstring;
+		_xdr_result = (xdrproc_t)xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *))approve_req_token_1_svc;
 		break;
 
@@ -134,12 +134,12 @@ void read_approvals(ifstream &input_file) {
 		unordered_map<string, string> newMap;
 		process_line(line, newMap);
 
-		dbResourceMap.insert(dbResourceMap.begin(), newMap);
+		dbResPermsVector.insert(dbResPermsVector.begin(), newMap);
 
 		i++;
 	}
 
-	for (auto currentMap : dbResourceMap) {
+	for (auto currentMap : dbResPermsVector) {
 		for (auto perm : currentMap) {
 			cout << perm.first << ":" << perm.second << endl;
 		}

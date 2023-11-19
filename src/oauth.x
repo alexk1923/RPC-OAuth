@@ -19,6 +19,11 @@ enum e_res_code {
 };
 
 
+enum e_approval_status {
+    SIGNED,
+    NOT_SIGNED
+}
+
 struct resource_perm_struct {
     string resource<>;
     string permission<>;
@@ -45,6 +50,7 @@ struct action_req {
     string resource<>;
     acces_token_struct access_token<>;
 };
+
 
 
 program AUTHORIZATION{
