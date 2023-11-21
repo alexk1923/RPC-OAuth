@@ -28,9 +28,6 @@ void authorization_1(char *host) {
 	access_token_req access_1_arg;
 	char **result_3;
 	action_req validate_action_1_arg;
-	auth_token_struct *result_4;
-	auth_token_struct approve_req_token_1_arg;
-
 #ifndef DEBUG
 	clnt = clnt_create(host, AUTHORIZATION, OAUTH, "udp");
 	if (clnt == NULL) {
@@ -96,7 +93,7 @@ operation *process_line(string line) {
 	return op;
 }
 
-void processOperation(operation *op) {
+void processOperation(operation *op, acces_token_struct *access_token) {
 	CLIENT *clnt;
 #ifndef DEBUG
 	clnt = clnt_create(HOST, AUTHORIZATION, OAUTH, "udp");
@@ -106,21 +103,60 @@ void processOperation(operation *op) {
 	}
 #endif /* DEBUG */
 
-	switch (op->operation_type) {
-	case REQUEST: {
+	if (op->operation_type == REQUEST) {
+
 		char **result_auth = auth_1(&(op->user_id), clnt);
 		if (result_auth == (char **)NULL) {
 			clnt_perror(clnt, "call failed");
 		}
-		cout << "result:" << (*result_auth) << endl;
 
-		auth_token_struct *auth_token =
-			(auth_token_struct *)malloc(sizeof(auth_token));
+		// If user is invalid
+		if (strcmp(res_code_to_str[USER_NOT_FOUND], *result_auth) == 0) {
+			cout << res_code_to_str[USER_NOT_FOUND] << endl;
+			return;
+		}
 
-		break;
-	}
-	default:
-		break;
+		char **result_approval = approve_req_token_1(result_auth, clnt);
+		// cout << "Result after approval:" << *result_approval <<
+		// endl;
+		// if (strcmp(*result_approval, res_code_to_str[REQUEST_DENIED]) == 0) {
+		// 	cout << res_code_to_str[REQUEST_DENIED] << endl;
+		// 	return;
+		// }
+
+		access_token_req *access_request =
+			(access_token_req *)malloc(sizeof(access_token_req));
+		access_request->auth_token = *result_approval;
+		access_request->user_id = op->user_id;
+		access_request->auto_refresh = op->automatic_refresh;
+		acces_token_struct *access_response = access_1(access_request, clnt);
+
+		if (strcmp(access_response->access_token,
+				   res_code_to_str[REQUEST_DENIED]) == 0) {
+			cout << res_code_to_str[REQUEST_DENIED] << endl;
+			return;
+		}
+
+		cout << *result_auth << " -> " << access_response->access_token << endl;
+
+		// cout << "Dupa cererea de acces, am primit asa:" << endl;
+		// cout << access_response->access_token << ", "
+		// 	 << access_response->refresh_token << "pt "
+		// 	 << access_response->valability << " request-uri." << endl;
+
+	} else {
+		// action_req action_request;
+		// action_request.access_token.access_token =
+		// access_response->access_token;
+		// action_request.access_token.refresh_token =
+		// 	access_response->refresh_token;
+		// action_request.access_token.valability = access_response->valability;
+
+		// action_request.operation = INSERT;
+		// action_request.resource = "Files";
+		// cout << *result_auth << " -> ";
+		// cout << access_response->access_token << endl;
+		// validate_action_1(&action_request, clnt);
 	}
 	clnt_destroy(clnt);
 }
@@ -129,20 +165,21 @@ void read_operations(ifstream &input_file) {
 	string line;
 	while (input_file >> line) {
 		operation *op = process_line(line);
-		printClientOperation(op);
-		processOperation(op);
+		// printClientOperation(op);
+		acces_token_struct *access_token = NULL;
+		processOperation(op, access_token);
 	}
 }
 
 int main(int argc, char *argv[]) {
 	char *operations_file;
 
-	if (argc < 2) {
-		printf("usage: %s <fisier_operatii>\n", argv[0]);
+	if (argc < 3) {
+		printf("usage: %s <client_addr> <fisier_operatii>\n", argv[0]);
 		exit(1);
 	}
 
-	operations_file = argv[1];
+	operations_file = argv[2];
 
 	ifstream input_file(operations_file);
 	read_operations(input_file);

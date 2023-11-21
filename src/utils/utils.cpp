@@ -2,17 +2,24 @@
 #include <iostream>
 using namespace std;
 
+char *const operation_to_str[] = {
+	[REQUEST] = "REQUEST", [READ] = "READ",		[INSERT] = "INSERT",
+	[MODIFY] = "MODIFY",   [DELETE] = "DELETE", [EXECUTE] = "EXECUTE"};
+
 void printClientOperation(operation *op) {
-	cout << "Operation structure:" << endl;
-	cout << op->user_id << endl;
-	cout << op->operation_type << endl;
-	cout << op->automatic_refresh << endl;
+	cout << "--------------------------------" << endl;
+	cout << "UserId:" << op->user_id << endl;
+	cout << "Operatie incercata:" << operation_to_str[op->operation_type]
+		 << endl;
+	cout << "Auto refresh enabled:" << op->automatic_refresh << endl;
 
 	if (!op->resource) {
-		cout << "No resource" << endl;
+		cout << "Nu se incearca accesarea niciunei resurse" << endl;
 	} else {
-		cout << op->resource << endl;
+		cout << "Se incearca sa se acceseze resursa:" << op->resource << endl;
 	}
+
+	cout << endl;
 }
 
 e_operation_type string_to_operation_type(string str) {
@@ -35,6 +42,8 @@ e_operation_type string_to_operation_type(string str) {
 	return op_type;
 }
 
+typedef enum e_res_code e_res_code;
+
 char *const res_code_to_str[] = {
 	[USER_NOT_FOUND] = "USER_NOT_FOUND",
 	[REQUEST_DENIED] = "REQUEST_DENIED",
@@ -43,4 +52,9 @@ char *const res_code_to_str[] = {
 	[RESOURCE_NOT_FOUND] = "RESOURCE_NOT_FOUND",
 	[OPERATION_NOT_PERMITTED] = "OPERATION_NOT_PERMITTED",
 	[PERMISSION_GRANTED] = "PERMISSION_GRANTED",
+};
+
+char *const approval_status_to_str[] = {
+	[SIGNED] = "SIGNED",
+	[NOT_SIGNED] = "NOT_SIGNED",
 };

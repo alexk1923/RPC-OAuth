@@ -57,6 +57,7 @@ typedef struct acces_token_struct acces_token_struct;
 struct access_token_req {
 	char *user_id;
 	char *auth_token;
+	int auto_refresh;
 };
 typedef struct access_token_req access_token_req;
 

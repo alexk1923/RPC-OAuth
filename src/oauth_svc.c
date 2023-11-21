@@ -139,12 +139,13 @@ void read_approvals(ifstream &input_file) {
 		i++;
 	}
 
-	for (auto currentMap : dbResPermsVector) {
-		for (auto perm : currentMap) {
-			cout << perm.first << ":" << perm.second << endl;
-		}
-		cout << "============\n\n\n\n\n\n\n";
-	}
+	// Read permissions
+	// for (auto currentMap : dbResPermsVector) {
+	// 	for (auto perm : currentMap) {
+	// 		cout << perm.first << ":" << perm.second << endl;
+	// 	}
+	// 	cout << "============\n\n\n\n\n\n\n";
+	// }
 }
 
 int main(int argc, char **argv) {
