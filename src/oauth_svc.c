@@ -45,7 +45,7 @@ static void authorization_1(struct svc_req *rqstp, register SVCXPRT *transp) {
 
 	case access:
 		_xdr_argument = (xdrproc_t)xdr_access_token_req;
-		_xdr_result = (xdrproc_t)xdr_acces_token_struct;
+		_xdr_result = (xdrproc_t)xdr_access_token_struct;
 		local = (char *(*)(char *, struct svc_req *))access_1_svc;
 		break;
 

@@ -5,6 +5,6 @@
 #include <unordered_map>
 using namespace std;
 
-extern unordered_map<string, acces_token_struct *> clientsTokens;
+extern unordered_map<string, access_token_struct *> clientsTokens;
 
 #endif

@@ -48,7 +48,7 @@ xdr_resource_perm_struct (XDR *xdrs, resource_perm_struct *objp)
 }
 
 bool_t
-xdr_acces_token_struct (XDR *xdrs, acces_token_struct *objp)
+xdr_access_token_struct (XDR *xdrs, access_token_struct *objp)
 {
 	register int32_t *buf;
 

@@ -47,12 +47,12 @@ struct resource_perm_struct {
 };
 typedef struct resource_perm_struct resource_perm_struct;
 
-struct acces_token_struct {
+struct access_token_struct {
 	char *access_token;
 	char *refresh_token;
 	int valability;
 };
-typedef struct acces_token_struct acces_token_struct;
+typedef struct access_token_struct access_token_struct;
 
 struct access_token_req {
 	char *user_id;
@@ -81,8 +81,8 @@ typedef struct action_req action_req;
 extern  char ** auth_1(char **, CLIENT *);
 extern  char ** auth_1_svc(char **, struct svc_req *);
 #define access 2
-extern  acces_token_struct * access_1(access_token_req *, CLIENT *);
-extern  acces_token_struct * access_1_svc(access_token_req *, struct svc_req *);
+extern  access_token_struct * access_1(access_token_req *, CLIENT *);
+extern  access_token_struct * access_1_svc(access_token_req *, struct svc_req *);
 #define validate_action 3
 extern  char ** validate_action_1(action_req *, CLIENT *);
 extern  char ** validate_action_1_svc(action_req *, struct svc_req *);
@@ -96,8 +96,8 @@ extern int authorization_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 extern  char ** auth_1();
 extern  char ** auth_1_svc();
 #define access 2
-extern  acces_token_struct * access_1();
-extern  acces_token_struct * access_1_svc();
+extern  access_token_struct * access_1();
+extern  access_token_struct * access_1_svc();
 #define validate_action 3
 extern  char ** validate_action_1();
 extern  char ** validate_action_1_svc();
@@ -114,7 +114,7 @@ extern  bool_t xdr_e_operation_type (XDR *, e_operation_type*);
 extern  bool_t xdr_e_res_code (XDR *, e_res_code*);
 extern  bool_t xdr_e_approval_status (XDR *, e_approval_status*);
 extern  bool_t xdr_resource_perm_struct (XDR *, resource_perm_struct*);
-extern  bool_t xdr_acces_token_struct (XDR *, acces_token_struct*);
+extern  bool_t xdr_access_token_struct (XDR *, access_token_struct*);
 extern  bool_t xdr_access_token_req (XDR *, access_token_req*);
 extern  bool_t xdr_approve_req (XDR *, approve_req*);
 extern  bool_t xdr_action_req (XDR *, action_req*);
@@ -124,7 +124,7 @@ extern bool_t xdr_e_operation_type ();
 extern bool_t xdr_e_res_code ();
 extern bool_t xdr_e_approval_status ();
 extern bool_t xdr_resource_perm_struct ();
-extern bool_t xdr_acces_token_struct ();
+extern bool_t xdr_access_token_struct ();
 extern bool_t xdr_access_token_req ();
 extern bool_t xdr_approve_req ();
 extern bool_t xdr_action_req ();

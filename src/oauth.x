@@ -30,7 +30,7 @@ struct resource_perm_struct {
 };
 
 
-struct acces_token_struct {
+struct access_token_struct {
     string access_token<>;
     string refresh_token<>;
     int valability;
@@ -57,8 +57,9 @@ struct action_req {
 program AUTHORIZATION{
     version OAUTH {
         string auth(string) = 1;
-        acces_token_struct access(access_token_req) = 2;
+        access_token_struct access(access_token_req) = 2;
         string validate_action(action_req) = 3;
         string approve_req_token(string) = 4;
+        access_token_struct refresh_access(string) = 5;
     } = 1;
 } = 0x31234567;

@@ -60,9 +60,9 @@ char **auth_1_svc(char **argp, struct svc_req *rqstp) {
 	return &result;
 }
 
-acces_token_struct *access_1_svc(access_token_req *argp,
-								 struct svc_req *rqstp) {
-	static acces_token_struct result;
+access_token_struct *access_1_svc(access_token_req *argp,
+								  struct svc_req *rqstp) {
+	static access_token_struct result;
 	// cout << "Se incearca acces de la userul" << argp->user_id
 	// 	 << " cu token:" << argp->auth_token << endl;
 	char *auth_token = argp->auth_token;
@@ -128,6 +128,8 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 
 	print_all_access_user_access_tokens();
 
+	// Token is not assigned to any user or it does not exist in the server
+	// database at all
 	if (found_user == "") {
 		print_status("DENY", operation_to_str[argp->operation], argp->resource,
 					 argp->access_token, 0);
@@ -137,7 +139,6 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 
 	// Check if token is expired
 	if (dbUsersAccessTokens[found_user].valability <= 0) {
-
 		if (dbUsersAccessTokens[found_user].refresh_token == "") {
 			print_status("DENY", operation_to_str[argp->operation],
 						 argp->resource, "",

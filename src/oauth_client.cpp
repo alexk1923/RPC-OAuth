@@ -26,7 +26,7 @@ void authorization_1(char *host) {
 	CLIENT *clnt;
 	char **result_1;
 	char *auth_1_arg;
-	acces_token_struct *result_2;
+	access_token_struct *result_2;
 	access_token_req access_1_arg;
 	char **result_3;
 	action_req validate_action_1_arg;
@@ -132,13 +132,16 @@ void processOperation(operation *op) {
 		access_request->user_id = op->user_id;
 		access_request->auto_refresh = op->automatic_refresh;
 
-		acces_token_struct *access_response = access_1(access_request, clnt);
+		access_token_struct *access_response = access_1(access_request, clnt);
 
 		if (strcmp(access_response->access_token,
 				   res_code_to_str[REQUEST_DENIED]) == 0) {
 			cout << res_code_to_str[REQUEST_DENIED] << endl;
 			return;
 		}
+
+		// Add user:{access_token} into the client database
+		clientsTokens.insert(make_pair(op->user_id, access_response));
 
 		cout << *result_auth << " -> " << access_response->access_token << endl;
 
@@ -149,9 +152,22 @@ void processOperation(operation *op) {
 
 	} else {
 		action_req *action_request = (action_req *)malloc(sizeof(action_req));
+		access_token_struct *current_access_token_struct =
+			clientsTokens.at(op->user_id);
 
-		action_request->access_token =
-			clientsTokens.at(op->user_id)->access_token;
+		if (current_access_token_struct) {
+			action_request->access_token =
+				current_access_token_struct->access_token;
+
+			// Check if token is expired and auto-refresh is active
+			if (op->automatic_refresh &&
+				current_access_token_struct->valability == 0) {
+				// Refresh token
+				// refresh_action *refresh_result =
+			}
+		} else {
+			action_request->access_token = strdup("");
+		}
 		action_request->operation = op->operation_type;
 		action_request->resource = op->resource;
 

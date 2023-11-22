@@ -24,15 +24,15 @@ auth_1(char **argp, CLIENT *clnt)
 	return (&clnt_res);
 }
 
-acces_token_struct *
+access_token_struct *
 access_1(access_token_req *argp, CLIENT *clnt)
 {
-	static acces_token_struct clnt_res;
+	static access_token_struct clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, access,
 		(xdrproc_t) xdr_access_token_req, (caddr_t) argp,
-		(xdrproc_t) xdr_acces_token_struct, (caddr_t) &clnt_res,
+		(xdrproc_t) xdr_access_token_struct, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}
