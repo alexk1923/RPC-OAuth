@@ -134,13 +134,13 @@ void read_approvals(ifstream &input_file) {
 		unordered_map<string, string> newMap;
 		process_line(line, newMap);
 
-		dbResPermsVector.insert(dbResPermsVector.begin(), newMap);
+		dbAllPermissionsList.insert(dbAllPermissionsList.begin(), newMap);
 
 		i++;
 	}
 
 	// Read permissions
-	// for (auto currentMap : dbResPermsVector) {
+	// for (auto currentMap : dbAllPermissionsList) {
 	// 	for (auto perm : currentMap) {
 	// 		cout << perm.first << ":" << perm.second << endl;
 	// 	}

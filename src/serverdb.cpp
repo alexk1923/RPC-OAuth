@@ -7,16 +7,16 @@ using namespace std;
 
 vector<string> dbUsers;
 vector<string> dbResources;
-vector<unordered_map<string, string>> dbResPermsVector;
+vector<unordered_map<string, string>> dbAllPermissionsList;
 int tokenLifetime;
-unordered_map<string, unordered_map<string, string>> dbTokenPerms;
+unordered_map<string, unordered_map<string, string>> dbTokenPermissions;
 unordered_map<string, e_approval_status> dbTokenApprovals;
 unordered_map<string, acces_token_struct> dbUsersAccessTokens;
 
 void print_all_perms() {
 	cout << "Avem urmatoarele asocieri de permisiuni:" << endl;
 
-	for (auto pair : dbTokenPerms) {
+	for (auto pair : dbTokenPermissions) {
 		cout << "Pentru tokenul:" << pair.first << ":" << endl;
 		for (auto perm : pair.second) {
 			cout << perm.first << ":" << perm.second << endl;

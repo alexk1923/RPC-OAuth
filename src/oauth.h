@@ -69,7 +69,7 @@ typedef struct approve_req approve_req;
 struct action_req {
 	e_operation_type operation;
 	char *resource;
-	acces_token_struct access_token;
+	char *access_token;
 };
 typedef struct action_req action_req;
 

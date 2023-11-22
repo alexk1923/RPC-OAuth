@@ -94,7 +94,7 @@ xdr_action_req (XDR *xdrs, action_req *objp)
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->resource, ~0))
 		 return FALSE;
-	 if (!xdr_acces_token_struct (xdrs, &objp->access_token))
+	 if (!xdr_string (xdrs, &objp->access_token, ~0))
 		 return FALSE;
 	return TRUE;
 }

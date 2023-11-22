@@ -4,6 +4,7 @@
  * as a guideline for developing your own functions.
  */
 
+#include "clientdb.h"
 #include "oauth.h"
 #include "utils/utils.h"
 #include <bits/stdc++.h>
@@ -19,6 +20,7 @@ using namespace std;
 #define MAX_LINE_SIZE 50
 #define MAX_USER_ID_LENGTH 50
 #define MAX_RESOURCE_SIZE 50
+#define MAX_ACCESS_TOKEN_SIZE 50
 
 void authorization_1(char *host) {
 	CLIENT *clnt;
@@ -93,7 +95,7 @@ operation *process_line(string line) {
 	return op;
 }
 
-void processOperation(operation *op, acces_token_struct *access_token) {
+void processOperation(operation *op) {
 	CLIENT *clnt;
 #ifndef DEBUG
 	clnt = clnt_create(HOST, AUTHORIZATION, OAUTH, "udp");
@@ -129,6 +131,7 @@ void processOperation(operation *op, acces_token_struct *access_token) {
 		access_request->auth_token = *result_approval;
 		access_request->user_id = op->user_id;
 		access_request->auto_refresh = op->automatic_refresh;
+
 		acces_token_struct *access_response = access_1(access_request, clnt);
 
 		if (strcmp(access_response->access_token,
@@ -145,29 +148,30 @@ void processOperation(operation *op, acces_token_struct *access_token) {
 		// 	 << access_response->valability << " request-uri." << endl;
 
 	} else {
-		// action_req action_request;
-		// action_request.access_token.access_token =
-		// access_response->access_token;
-		// action_request.access_token.refresh_token =
-		// 	access_response->refresh_token;
-		// action_request.access_token.valability = access_response->valability;
+		action_req *action_request = (action_req *)malloc(sizeof(action_req));
 
-		// action_request.operation = INSERT;
-		// action_request.resource = "Files";
-		// cout << *result_auth << " -> ";
-		// cout << access_response->access_token << endl;
-		// validate_action_1(&action_request, clnt);
+		action_request->access_token =
+			clientsTokens.at(op->user_id)->access_token;
+		action_request->operation = op->operation_type;
+		action_request->resource = op->resource;
+
+		char **action_response = validate_action_1(action_request, clnt);
+		if (action_response == (char **)NULL) {
+			clnt_perror(clnt, "call failed");
+		}
+
+		cout << *action_response << endl;
 	}
 	clnt_destroy(clnt);
 }
 
 void read_operations(ifstream &input_file) {
 	string line;
+
 	while (input_file >> line) {
 		operation *op = process_line(line);
 		// printClientOperation(op);
-		acces_token_struct *access_token = NULL;
-		processOperation(op, access_token);
+		processOperation(op);
 	}
 }
 

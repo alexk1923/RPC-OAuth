@@ -6,6 +6,10 @@ char *const operation_to_str[] = {
 	[REQUEST] = "REQUEST", [READ] = "READ",		[INSERT] = "INSERT",
 	[MODIFY] = "MODIFY",   [DELETE] = "DELETE", [EXECUTE] = "EXECUTE"};
 
+char *const operation_to_char[] = {
+	[REQUEST] = "", [READ] = "R",	[INSERT] = "I",
+	[MODIFY] = "M", [DELETE] = "D", [EXECUTE] = "X"};
+
 void printClientOperation(operation *op) {
 	cout << "--------------------------------" << endl;
 	cout << "UserId:" << op->user_id << endl;

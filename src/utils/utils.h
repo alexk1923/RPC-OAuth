@@ -13,3 +13,5 @@ typedef struct {
 void printClientOperation(operation *op);
 e_operation_type string_to_operation_type(string str);
 extern char *const res_code_to_str[];
+extern char *const operation_to_str[];
+extern char *const operation_to_char[];

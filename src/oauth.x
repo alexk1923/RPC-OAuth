@@ -49,7 +49,7 @@ struct approve_req {
 struct action_req {
     e_operation_type operation;
     string resource<>;
-    acces_token_struct access_token;
+    string access_token<>;
 };
 
 
