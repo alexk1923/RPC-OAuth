@@ -60,6 +60,6 @@ program AUTHORIZATION{
         access_token_struct access(access_token_req) = 2;
         string validate_action(action_req) = 3;
         string approve_req_token(string) = 4;
-        access_token_struct refresh_access(string) = 5;
+        access_token_struct refresh_access(access_token_struct) = 5;
     } = 1;
 } = 0x31234567;

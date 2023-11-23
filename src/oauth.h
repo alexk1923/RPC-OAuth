@@ -89,6 +89,9 @@ extern  char ** validate_action_1_svc(action_req *, struct svc_req *);
 #define approve_req_token 4
 extern  char ** approve_req_token_1(char **, CLIENT *);
 extern  char ** approve_req_token_1_svc(char **, struct svc_req *);
+#define refresh_access 5
+extern  access_token_struct * refresh_access_1(access_token_struct *, CLIENT *);
+extern  access_token_struct * refresh_access_1_svc(access_token_struct *, struct svc_req *);
 extern int authorization_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -104,6 +107,9 @@ extern  char ** validate_action_1_svc();
 #define approve_req_token 4
 extern  char ** approve_req_token_1();
 extern  char ** approve_req_token_1_svc();
+#define refresh_access 5
+extern  access_token_struct * refresh_access_1();
+extern  access_token_struct * refresh_access_1_svc();
 extern int authorization_1_freeresult ();
 #endif /* K&R C */
 

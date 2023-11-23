@@ -27,6 +27,7 @@ static void authorization_1(struct svc_req *rqstp, register SVCXPRT *transp) {
 		access_token_req access_1_arg;
 		action_req validate_action_1_arg;
 		char *approve_req_token_1_arg;
+		access_token_struct refresh_access_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -59,6 +60,12 @@ static void authorization_1(struct svc_req *rqstp, register SVCXPRT *transp) {
 		_xdr_argument = (xdrproc_t)xdr_wrapstring;
 		_xdr_result = (xdrproc_t)xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *))approve_req_token_1_svc;
+		break;
+
+	case refresh_access:
+		_xdr_argument = (xdrproc_t)xdr_access_token_struct;
+		_xdr_result = (xdrproc_t)xdr_access_token_struct;
+		local = (char *(*)(char *, struct svc_req *))refresh_access_1_svc;
 		break;
 
 	default:

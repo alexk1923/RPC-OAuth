@@ -11,9 +11,9 @@ extern vector<string> dbUsers;
 extern vector<string> dbResources;
 extern vector<unordered_map<string, string>> dbAllPermissionsList;
 extern int tokenLifetime;
+extern unordered_map<string, e_approval_status> dbAuthTokenApprovals;
 extern unordered_map<string, unordered_map<string, string>> dbTokenPermissions;
-extern unordered_map<string, e_approval_status> dbTokenApprovals;
-extern unordered_map<string, acces_token_struct> dbUsersAccessTokens;
+extern unordered_map<string, access_token_struct> dbUsersAccessTokens;
 void print_all_perms();
 void print_users_access_tokens();
 

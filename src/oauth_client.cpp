@@ -139,11 +139,14 @@ void processOperation(operation *op) {
 			cout << res_code_to_str[REQUEST_DENIED] << endl;
 			return;
 		}
-
 		// Add user:{access_token} into the client database
-		clientsTokens.insert(make_pair(op->user_id, access_response));
+		clientsTokens[op->user_id] = *access_response;
 
-		cout << *result_auth << " -> " << access_response->access_token << endl;
+		cout << *result_auth << " -> " << access_response->access_token;
+		if (strcmp(access_response->refresh_token, "") != 0) {
+			cout << "," << access_response->refresh_token;
+		}
+		cout << endl;
 
 		// cout << "Dupa cererea de acces, am primit asa:" << endl;
 		// cout << access_response->access_token << ", "
@@ -152,19 +155,51 @@ void processOperation(operation *op) {
 
 	} else {
 		action_req *action_request = (action_req *)malloc(sizeof(action_req));
-		access_token_struct *current_access_token_struct =
-			clientsTokens.at(op->user_id);
+		cout << "Action:" << endl;
+		cout << op->user_id << " " << operation_to_str[op->operation_type]
+			 << " " << op->resource << endl;
 
-		if (current_access_token_struct) {
+		// for (auto client_token : clientsTokens) {
+		// 	cout << "Clientul " << client_token.first
+		// 		 << " are access token=" << client_token.second.access_token
+		// 		 << "," << client_token.second.refresh_token << ","
+		// 		 << client_token.second.valability << endl;
+		// }
+		// cout << endl;
+		if (clientsTokens.count(op->user_id) != 0) {
+
 			action_request->access_token =
-				current_access_token_struct->access_token;
+				clientsTokens.at(op->user_id).access_token;
 
 			// Check if token is expired and auto-refresh is active
-			if (op->automatic_refresh &&
-				current_access_token_struct->valability == 0) {
+			if (strlen(clientsTokens.at(op->user_id).refresh_token) > 1 &&
+				clientsTokens.at(op->user_id).valability == 0) {
 				// Refresh token
-				// refresh_action *refresh_result =
+				// cout << "tokenul" <<
+				// clientsTokens.at(op->user_id).access_token
+				// 	 << " a expirat si va fi inlocuit" << endl;
+				access_token_struct *refresh_response =
+					refresh_access_1(&(clientsTokens.at(op->user_id)), clnt);
+
+				// Update userId:{new_token} in the client database
+				clientsTokens[op->user_id].access_token =
+					refresh_response->access_token;
+				clientsTokens[op->user_id].refresh_token =
+					refresh_response->refresh_token;
+				clientsTokens[op->user_id].valability =
+					refresh_response->valability;
+
+			} else {
+				// cout << "teoretic se scade valabilitatea:" << endl;
+
+				// cout << "new valability:"
+				// 	 << clientsTokens.at(op->user_id).valability << endl;
 			}
+
+			// Update the request token to the new token
+			action_request->access_token =
+				clientsTokens[op->user_id].access_token;
+
 		} else {
 			action_request->access_token = strdup("");
 		}
@@ -177,6 +212,11 @@ void processOperation(operation *op) {
 		}
 
 		cout << *action_response << endl;
+
+		if (clientsTokens.count(op->user_id) > 0) {
+			clientsTokens.at(op->user_id).valability =
+				clientsTokens.at(op->user_id).valability - 1;
+		}
 	}
 	clnt_destroy(clnt);
 }

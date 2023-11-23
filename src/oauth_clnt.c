@@ -68,3 +68,18 @@ approve_req_token_1(char **argp, CLIENT *clnt)
 	}
 	return (&clnt_res);
 }
+
+access_token_struct *
+refresh_access_1(access_token_struct *argp, CLIENT *clnt)
+{
+	static access_token_struct clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	if (clnt_call (clnt, refresh_access,
+		(xdrproc_t) xdr_access_token_struct, (caddr_t) argp,
+		(xdrproc_t) xdr_access_token_struct, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}

@@ -68,8 +68,8 @@ access_token_struct *access_1_svc(access_token_req *argp,
 	char *auth_token = argp->auth_token;
 
 	// Check if token is valid
-	if (dbTokenApprovals.count(auth_token) > 0 &&
-		dbTokenApprovals.at(auth_token) == SIGNED) {
+	if (dbAuthTokenApprovals.count(auth_token) > 0 &&
+		dbAuthTokenApprovals.at(auth_token) == SIGNED) {
 		result.access_token = generate_access_token(auth_token);
 		// Check if user has auto_refresh enabled
 		if (argp->auto_refresh) {
@@ -104,6 +104,9 @@ access_token_struct *access_1_svc(access_token_req *argp,
 	// If it is NOT a REQUEST DENIED error code
 	if (strcmp(result.access_token, res_code_to_str[REQUEST_DENIED])) {
 		cout << "  AccessToken = " << result.access_token << endl;
+		if (argp->auto_refresh == 1) {
+			cout << "  RefreshToken = " << result.refresh_token << endl;
+		}
 	}
 	return &result;
 }
@@ -126,7 +129,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 		}
 	}
 
-	print_all_access_user_access_tokens();
+	// print_all_access_user_access_tokens();
 
 	// Token is not assigned to any user or it does not exist in the server
 	// database at all
@@ -146,18 +149,6 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 
 			result = res_code_to_str[TOKEN_EXPIRED];
 			return &result;
-		} else {
-			cout << "BEGIN " << found_user << " AUTHZ REFRESH " << endl;
-			char *new_access_token = generate_access_token(
-				dbUsersAccessTokens[found_user].refresh_token);
-			dbUsersAccessTokens[found_user].access_token = new_access_token;
-			dbUsersAccessTokens[found_user].refresh_token =
-				generate_access_token(new_access_token);
-			dbUsersAccessTokens[found_user].valability = tokenLifetime;
-			argp->access_token = new_access_token;
-			cout << "  Access Token = " << new_access_token << endl;
-			cout << " Refresh Token = "
-				 << dbUsersAccessTokens[found_user].refresh_token << endl;
 		}
 	}
 
@@ -235,10 +226,46 @@ char **approve_req_token_1_svc(char **argp, struct svc_req *rqstp) {
 		// The user does not approve permissions
 
 		strcat(result, ".SIGNED");
-		dbTokenApprovals.insert(make_pair(auth_token, SIGNED));
+		dbAuthTokenApprovals.insert(make_pair(auth_token, SIGNED));
 
 	} else {
 		cout << "Resource file is empty" << endl;
 	}
+	return &result;
+}
+
+access_token_struct *refresh_access_1_svc(access_token_struct *argp,
+										  struct svc_req *rqstp) {
+	static access_token_struct result;
+	char *new_access_token = generate_access_token(argp->refresh_token);
+	char *new_refresh_token = generate_access_token(new_access_token);
+
+	// cout << "Pana acu avem urmatoarele asocieri:" << endl;
+	// print_all_access_user_access_tokens();
+
+	string found_user;
+	for (auto userAccessToken : dbUsersAccessTokens) {
+		if (strcmp(userAccessToken.second.access_token, argp->access_token) ==
+			0) {
+			found_user = userAccessToken.first;
+			break;
+		}
+	}
+	cout << "BEGIN " << found_user << " AUTHZ REFRESH" << endl;
+	result.access_token = new_access_token;
+	result.refresh_token = new_refresh_token;
+	result.valability = tokenLifetime;
+	cout << "  AccessToken = " << result.access_token << endl;
+	cout << "  RefreshToken = " << result.refresh_token << endl;
+
+	// Update user:{token} in the database
+	dbUsersAccessTokens[found_user] = result;
+
+	// Update permissions for the new access token
+	dbTokenPermissions[result.access_token] =
+		dbTokenPermissions[argp->access_token];
+
+	// cout << "dupa refresh avem urm asocieri" << endl;
+	// print_all_access_user_access_tokens();
 	return &result;
 }
