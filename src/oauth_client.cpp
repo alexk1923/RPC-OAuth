@@ -22,52 +22,19 @@ using namespace std;
 #define MAX_RESOURCE_SIZE 50
 #define MAX_ACCESS_TOKEN_SIZE 50
 
-void authorization_1(char *host) {
-	CLIENT *clnt;
-	char **result_1;
-	char *auth_1_arg;
-	access_token_struct *result_2;
-	access_token_req access_1_arg;
-	char **result_3;
-	action_req validate_action_1_arg;
-#ifndef DEBUG
-	clnt = clnt_create(host, AUTHORIZATION, OAUTH, "udp");
-	if (clnt == NULL) {
-		clnt_pcreateerror(host);
-		exit(1);
-	}
-#endif /* DEBUG */
-
-	// result_1 = auth_1(&auth_1_arg, clnt);
-	// if (result_1 == (char **)NULL) {
-	// 	clnt_perror(clnt, "call failed");
-	// }
-	// result_2 = access_1(&access_1_arg, clnt);
-	// if (result_2 == (acces_token_struct *)NULL) {
-	// 	clnt_perror(clnt, "call failed");
-	// }
-	// result_3 = validate_action_1(&validate_action_1_arg, clnt);
-	// if (result_3 == (char **)NULL) {
-	// 	clnt_perror(clnt, "call failed");
-	// }
-	// result_4 = approve_req_token_1(&approve_req_token_1_arg, clnt);
-	// if (result_4 == (auth_token_struct *)NULL) {
-	// 	clnt_perror(clnt, "call failed");
-	// }
-#ifndef DEBUG
-	clnt_destroy(clnt);
-#endif /* DEBUG */
-}
-
+/**
+ * Process each line from the input to create an operation structure
+ *
+ * @param line from input file
+ * @return operation structure containing all info about future actions
+ */
 operation *process_line(string line) {
-	vector<string> v;
-
 	stringstream ss(line);
 	int idx = 0;
 	operation *op = (operation *)malloc(sizeof(operation));
 	op->user_id = (char *)malloc(MAX_USER_ID_LENGTH * sizeof(char));
-
 	op->automatic_refresh = -1;
+
 	while (ss.good()) {
 		string substr;
 		getline(ss, substr, ',');
@@ -106,107 +73,82 @@ void processOperation(operation *op) {
 #endif /* DEBUG */
 
 	if (string_to_operation_type(op->operation_type) == REQUEST) {
-
+		// REQUEST to get the authentication token from the server
 		char **result_auth = auth_1(&(op->user_id), clnt);
 		if (result_auth == (char **)NULL) {
 			clnt_perror(clnt, "call failed");
 		}
 
-		// If user is invalid
+		// Return if user has not been found
 		if (strcmp(res_code_to_str[USER_NOT_FOUND], *result_auth) == 0) {
 			cout << res_code_to_str[USER_NOT_FOUND] << endl;
 			return;
 		}
 
+		// REQUEST to attach permissions to the token
 		char **result_approval = approve_req_token_1(result_auth, clnt);
-		// cout << "Result after approval:" << *result_approval <<
-		// endl;
-		// if (strcmp(*result_approval, res_code_to_str[REQUEST_DENIED]) == 0) {
-		// 	cout << res_code_to_str[REQUEST_DENIED] << endl;
-		// 	return;
-		// }
+		if (result_approval == (char **)NULL) {
+			clnt_perror(clnt, "call failed");
+		}
 
+		// Create Access Request structure
 		access_token_req *access_request =
 			(access_token_req *)malloc(sizeof(access_token_req));
 		access_request->auth_token = *result_approval;
 		access_request->user_id = op->user_id;
 		access_request->auto_refresh = op->automatic_refresh;
 
+		// REQUEST to get the access token
 		access_token_struct *access_response = access_1(access_request, clnt);
+		if (access_response == (access_token_struct *)NULL) {
+			clnt_perror(clnt, "call failed");
+		}
 
+		// Return if request has been denied
 		if (strcmp(access_response->access_token,
 				   res_code_to_str[REQUEST_DENIED]) == 0) {
 			cout << res_code_to_str[REQUEST_DENIED] << endl;
 			return;
 		}
-		// Add user:{access_token} into the client database
+		// Add {user:access_token} pair into the client database
 		clientsTokens[op->user_id] = *access_response;
-
 		cout << *result_auth << " -> " << access_response->access_token;
 		if (strcmp(access_response->refresh_token, "") != 0) {
 			cout << "," << access_response->refresh_token;
 		}
 		cout << endl;
 
-		// cout << "Dupa cererea de acces, am primit asa:" << endl;
-		// cout << access_response->access_token << ", "
-		// 	 << access_response->refresh_token << "pt "
-		// 	 << access_response->valability << " request-uri." << endl;
-
 	} else {
 		action_req *action_request = (action_req *)malloc(sizeof(action_req));
-		// cout << "Action:" << endl;
-		// cout << op->user_id << " " << op->operation_type << " " <<
-		// op->resource
-		// 	 << endl;
 
-		// for (auto client_token : clientsTokens) {
-		// 	cout << "Clientul " << client_token.first
-		// 		 << " are access token=" << client_token.second.access_token
-		// 		 << "," << client_token.second.refresh_token << ","
-		// 		 << client_token.second.valability << endl;
-		// }
-		// cout << endl;
+		// Check if the user is valid and has a token
 		if (clientsTokens.count(op->user_id) != 0) {
 
 			action_request->access_token =
 				clientsTokens.at(op->user_id).access_token;
 
-			// Check if token is expired and auto-refresh is active
+			// Refresh if the token is expired and auto-refresh option is active
 			if (strlen(clientsTokens.at(op->user_id).refresh_token) > 1 &&
 				clientsTokens.at(op->user_id).valability == 0) {
-				// Refresh token
-				// cout << "tokenul" <<
-				// clientsTokens.at(op->user_id).access_token
-				// 	 << " a expirat si va fi inlocuit" << endl;
 				access_token_struct *refresh_response =
 					refresh_access_1(&(clientsTokens.at(op->user_id)), clnt);
-
-				// Update userId:{new_token} in the client database
+				// Update token in the clients db
 				clientsTokens[op->user_id].access_token =
 					refresh_response->access_token;
 				clientsTokens[op->user_id].refresh_token =
 					refresh_response->refresh_token;
 				clientsTokens[op->user_id].valability =
 					refresh_response->valability;
-
-			} else {
-				// cout << "teoretic se scade valabilitatea:" << endl;
-
-				// cout << "new valability:"
-				// 	 << clientsTokens.at(op->user_id).valability << endl;
 			}
-
-			// Update the request token to the new token
 			action_request->access_token =
 				clientsTokens[op->user_id].access_token;
-
 		} else {
 			action_request->access_token = strdup("");
 		}
 		action_request->operation = op->operation_type;
 		action_request->resource = op->resource;
 
+		// REQUEST to validate an action
 		char **action_response = validate_action_1(action_request, clnt);
 		if (action_response == (char **)NULL) {
 			clnt_perror(clnt, "call failed");
@@ -214,9 +156,9 @@ void processOperation(operation *op) {
 
 		cout << *action_response << endl;
 
+		//  Decrease remaining requests
 		if (clientsTokens.count(op->user_id) > 0) {
-			clientsTokens.at(op->user_id).valability =
-				clientsTokens.at(op->user_id).valability - 1;
+			clientsTokens.at(op->user_id).valability--;
 		}
 	}
 	clnt_destroy(clnt);
@@ -227,7 +169,6 @@ void read_operations(ifstream &input_file) {
 
 	while (input_file >> line) {
 		operation *op = process_line(line);
-		// printClientOperation(op);
 		processOperation(op);
 	}
 }
@@ -236,15 +177,13 @@ int main(int argc, char *argv[]) {
 	char *operations_file;
 
 	if (argc < 3) {
-		printf("usage: %s <client_addr> <fisier_operatii>\n", argv[0]);
+		printf("usage: %s <client_addr> <operation_file>\n", argv[0]);
 		exit(1);
 	}
 
 	operations_file = argv[2];
-
 	ifstream input_file(operations_file);
 	read_operations(input_file);
 
-	authorization_1(HOST);
 	exit(0);
 }

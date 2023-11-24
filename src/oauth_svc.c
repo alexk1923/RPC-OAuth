@@ -122,12 +122,6 @@ void process_line(string line, unordered_map<string, string> &newMap) {
 		string permissions;
 		getline(ss, resource, ',');
 		getline(ss, permissions, ',');
-
-		// cout << "RESOURCE:" << resource << endl;
-		// cout << "PERMISSIONS:" << permissions << endl;
-
-		// File
-
 		newMap.insert(make_pair(resource, permissions));
 
 		idx++;
@@ -145,14 +139,6 @@ void read_approvals(ifstream &input_file) {
 
 		i++;
 	}
-
-	// Read permissions
-	// for (auto currentMap : dbAllPermissionsList) {
-	// 	for (auto perm : currentMap) {
-	// 		cout << perm.first << ":" << perm.second << endl;
-	// 	}
-	// 	cout << "============\n\n\n\n\n\n\n";
-	// }
 }
 
 int main(int argc, char **argv) {
