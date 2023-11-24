@@ -1,7 +1,7 @@
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://linkedin.com/in/othneildrew)  
 [![github](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/alexk1923)
 
-[![Logo](images/logo.png)](https://github.com/alexk1923/RPC-OAuth/blob/main/src/img/rpc-client-server-auth.png)
+[![Logo](images/logo.png)](./src/img/rpc-client-server-auth.png)
 
 ### Client-Server OAuth App using RPC Protocol
 
@@ -20,7 +20,7 @@ Table of Contents
 
 ## About The Project
 
-[![RPC-OAuth-Client-Server](images/screenshot.png)](https://github.com/alexk1923/RPC-OAuth/blob/main/src/img/schema_logica.png)
+[![RPC-OAuth-Client-Server](images/screenshot.png)](./src/img/schema_logica.png)
 
 The app is using RPC Concept to simulate an authorization system using OAuth. It is working by a request-response system between the server and the client, authorizing RIMDX (Read, Insert, Modify, Delete, Execute) actions type to simulate the access to some resources stored on the server.
 
