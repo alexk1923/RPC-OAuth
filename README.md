@@ -1,7 +1,7 @@
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://linkedin.com/in/othneildrew)  
 [![github](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/alexk1923)
 
-[![Logo](images/logo.png)](./src/img/rpc-client-server-auth.png)
+[![Logo](./src/img/rpc-client-server-auth.png)](./src/img/rpc-client-server-auth.png)
 
 ### Client-Server OAuth App using RPC Protocol
 
@@ -20,7 +20,7 @@ Table of Contents
 
 ## About The Project
 
-[![RPC-OAuth-Client-Server](images/screenshot.png)](./src/img/schema_logica.png)
+[![RPC-OAuth-Client-Server](./src/img/schema_logica.png)](./src/img/schema_logica.png)
 
 The app is using RPC Concept to simulate an authorization system using OAuth. It is working by a request-response system between the server and the client, authorizing RIMDX (Read, Insert, Modify, Delete, Execute) actions type to simulate the access to some resources stored on the server.
 
@@ -55,7 +55,6 @@ This is an example of how to list things you need to use the software and how to
   ```sh
   sudo apt-get install rpcbind
   sudo /etc/init.d/rpcbind start
-
   ```
 
 - run `rpcinfo -p` to check if the RPC server is running
@@ -63,7 +62,6 @@ This is an example of how to list things you need to use the software and how to
 
   ```sh
    sudo apt-get install g++
-
   ```
 
 ### Installation
@@ -74,7 +72,6 @@ _Below is an example of how you can instruct your audience on installing and set
 
     ```sh
     git clone git@github.com:alexk1923/RPC-OAuth.git
-
     ```
 
 2.  Edit the configuration in [check.sh](http://check.sh) by completing SERVER and CLIENT params
@@ -83,21 +80,18 @@ _Below is an example of how you can instruct your audience on installing and set
     SERVER_NAME="src/server"
      CLIENT_NAME="src/client"
      SERVER_ADDR="localhost" (OR another valid address)
-
     ```
 
 3.  Run Makefile (from src directory)
 
     ```sh
     make
-
     ```
 
 4.  Run the checker to see the result
 
     ```sh
     ./check.sh testNo([0-7]|all) [showOutput([0-1])]
-
     ```
 
 ([back to top](#readme-top))
