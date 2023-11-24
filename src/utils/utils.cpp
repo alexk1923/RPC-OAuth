@@ -13,8 +13,7 @@ char *const operation_to_char[] = {
 void printClientOperation(operation *op) {
 	cout << "--------------------------------" << endl;
 	cout << "UserId:" << op->user_id << endl;
-	cout << "Operatie incercata:" << operation_to_str[op->operation_type]
-		 << endl;
+	cout << "Operatie incercata:" << op->operation_type << endl;
 	cout << "Auto refresh enabled:" << op->automatic_refresh << endl;
 
 	if (!op->resource) {
@@ -41,7 +40,7 @@ e_operation_type string_to_operation_type(string str) {
 	} else if (str == "EXECUTE") {
 		op_type = EXECUTE;
 	} else {
-		cout << "Invalid type of operation!";
+		op_type = INVALID;
 	}
 	return op_type;
 }

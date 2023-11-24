@@ -90,7 +90,7 @@ xdr_action_req (XDR *xdrs, action_req *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_e_operation_type (xdrs, &objp->operation))
+	 if (!xdr_string (xdrs, &objp->operation, ~0))
 		 return FALSE;
 	 if (!xdr_string (xdrs, &objp->resource, ~0))
 		 return FALSE;

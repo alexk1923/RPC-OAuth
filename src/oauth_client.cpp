@@ -76,10 +76,10 @@ operation *process_line(string line) {
 			strcpy(op->user_id, substr.c_str());
 			break;
 		case 1:
-			op->operation_type = string_to_operation_type(substr);
+			op->operation_type = strdup(substr.c_str());
 			break;
 		case 2:
-			if (op->operation_type == REQUEST) {
+			if (string_to_operation_type(op->operation_type) == REQUEST) {
 				op->automatic_refresh = stoi(substr);
 				op->resource = NULL;
 			} else {
@@ -105,7 +105,7 @@ void processOperation(operation *op) {
 	}
 #endif /* DEBUG */
 
-	if (op->operation_type == REQUEST) {
+	if (string_to_operation_type(op->operation_type) == REQUEST) {
 
 		char **result_auth = auth_1(&(op->user_id), clnt);
 		if (result_auth == (char **)NULL) {
@@ -155,9 +155,10 @@ void processOperation(operation *op) {
 
 	} else {
 		action_req *action_request = (action_req *)malloc(sizeof(action_req));
-		cout << "Action:" << endl;
-		cout << op->user_id << " " << operation_to_str[op->operation_type]
-			 << " " << op->resource << endl;
+		// cout << "Action:" << endl;
+		// cout << op->user_id << " " << op->operation_type << " " <<
+		// op->resource
+		// 	 << endl;
 
 		// for (auto client_token : clientsTokens) {
 		// 	cout << "Clientul " << client_token.first

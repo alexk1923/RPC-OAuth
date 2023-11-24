@@ -1,10 +1,11 @@
 enum e_operation_type {
-    REQUEST,
-    READ,
-    INSERT,
-    MODIFY,
-    DELETE,
-    EXECUTE
+    INVALID = -1,
+    REQUEST = 0,
+    READ = 1,
+    INSERT = 2,
+    MODIFY = 3,
+    DELETE = 4,
+    EXECUTE = 5
 };
 
 
@@ -47,7 +48,7 @@ struct approve_req {
 };
 
 struct action_req {
-    e_operation_type operation;
+    string operation<>;
     string resource<>;
     string access_token<>;
 };

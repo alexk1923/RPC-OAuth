@@ -5,7 +5,7 @@ using namespace std;
 
 typedef struct {
 	char *user_id;
-	e_operation_type operation_type;
+	char *operation_type;
 	char *resource;
 	int automatic_refresh;
 } operation;

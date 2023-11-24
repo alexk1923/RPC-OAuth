@@ -10,6 +10,10 @@
 
 bool check_permission(string list_of_permissions,
 					  e_operation_type operation_type) {
+
+	if (operation_type == INVALID) {
+		return false;
+	}
 	return list_of_permissions.find(operation_to_char[operation_type]) <
 		   list_of_permissions.length();
 }
@@ -134,7 +138,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 	// Token is not assigned to any user or it does not exist in the server
 	// database at all
 	if (found_user == "") {
-		print_status("DENY", operation_to_str[argp->operation], argp->resource,
+		print_status("DENY", argp->operation, argp->resource,
 					 argp->access_token, 0);
 		result = res_code_to_str[PERMISSION_DENIED];
 		return &result;
@@ -143,8 +147,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 	// Check if token is expired
 	if (dbUsersAccessTokens[found_user].valability <= 0) {
 		if (dbUsersAccessTokens[found_user].refresh_token == "") {
-			print_status("DENY", operation_to_str[argp->operation],
-						 argp->resource, "",
+			print_status("DENY", argp->operation, argp->resource, "",
 						 dbUsersAccessTokens[found_user].valability);
 
 			result = res_code_to_str[TOKEN_EXPIRED];
@@ -164,7 +167,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 		find(dbResources.begin(), dbResources.end(), resource_string);
 
 	if (it == dbResources.end()) {
-		print_status("DENY", operation_to_str[argp->operation], argp->resource,
+		print_status("DENY", argp->operation, argp->resource,
 					 argp->access_token,
 					 dbUsersAccessTokens[found_user].valability);
 		result = res_code_to_str[RESOURCE_NOT_FOUND];
@@ -175,8 +178,8 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 		dbTokenPermissions.at(argp->access_token).count(argp->resource) == 0 ||
 		!check_permission(
 			dbTokenPermissions.at(argp->access_token).at(argp->resource),
-			argp->operation)) {
-		print_status("DENY", operation_to_str[argp->operation], argp->resource,
+			string_to_operation_type(argp->operation))) {
+		print_status("DENY", argp->operation, argp->resource,
 					 argp->access_token,
 					 dbUsersAccessTokens[found_user].valability);
 		result = res_code_to_str[OPERATION_NOT_PERMITTED];
@@ -194,8 +197,7 @@ char **validate_action_1_svc(action_req *argp, struct svc_req *rqstp) {
 	// 	return &result;
 	// }
 
-	print_status("PERMIT", operation_to_str[argp->operation], argp->resource,
-				 argp->access_token,
+	print_status("PERMIT", argp->operation, argp->resource, argp->access_token,
 				 dbUsersAccessTokens[found_user].valability);
 
 	result = res_code_to_str[PERMISSION_GRANTED];

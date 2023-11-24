@@ -15,6 +15,7 @@ extern "C" {
 
 
 enum e_operation_type {
+	INVALID = -1,
 	REQUEST = 0,
 	READ = 1,
 	INSERT = 2,
@@ -67,7 +68,7 @@ struct approve_req {
 typedef struct approve_req approve_req;
 
 struct action_req {
-	e_operation_type operation;
+	char *operation;
 	char *resource;
 	char *access_token;
 };
